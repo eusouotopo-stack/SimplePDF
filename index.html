@@ -5,54 +5,99 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SimplePDF - Futuristic PDF Generator</title>
 <style>
-body, html { margin:0; padding:0; font-family: 'Orbitron', sans-serif; }
-body.dark { background: linear-gradient(to right, #234, #135, #123456); color:#fff; }
-body.light { background:#f4f4f4; color:#000; }
+/* Reset básico */
+body, html { margin:0; padding:0; font-family:'Orbitron', sans-serif; overflow-x:hidden; transition:0.5s; }
 
-/* Fixed Ad banner top */
-.ad-banner-fixed { position:fixed; top:0; width:100%; min-height:50px; background:darkblue; text-align:center; z-index:1000; display:flex; align-items:center; justify-content:center;}
+/* Dark/Light Mode */
+body.dark { background: linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#1a1a1a); color:#fff; }
+body.light { background: linear-gradient(-45deg,#f4f4f4,#e0e0e0,#cfcfcf,#fdfdfd); color:#000; }
+
+/* Fundo animado */
+@keyframes gradientBG {
+  0% {background-position:0% 50%;}
+  50% {background-position:100% 50%;}
+  100% {background-position:0% 50%;}
+}
+body { background-size: 400% 400%; animation: gradientBG 20s ease infinite; }
+
+/* Fixed Ad Banner Top */
+.ad-banner-fixed { 
+  position:fixed; top:0; width:100%; min-height:60px; 
+  background:rgba(0,0,0,0.85); display:flex; align-items:center; justify-content:center; z-index:1000; backdrop-filter: blur(6px); 
+}
 .ad-banner-fixed span { color:#00ffff; font-weight:bold; }
+/* AdSense comment */
+.ad-banner-fixed::after { content:"Place AdSense code here"; display:block; font-size:12px; color:#0ff; margin-top:2px; }
 
 /* Menu */
-#menu { display:flex; justify-content:center; gap:15px; background:rgba(0,0,0,0.8); padding:15px; margin-top:60px; flex-wrap:wrap; position:relative; z-index:900; }
-#menu button { padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; background:#00ffff; color:#000; transition:0.3s; }
-#menu button:hover { background:#00cccc; }
+#menu { 
+  display:flex; justify-content:center; gap:15px; flex-wrap:wrap; 
+  background:rgba(0,0,0,0.7); padding:15px; margin:80px auto 20px auto; 
+  position:relative; z-index:900; border-radius:12px; width:fit-content;
+}
+#menu button { 
+  padding:12px 25px; border:none; border-radius:12px; cursor:pointer; font-weight:bold; 
+  background:rgba(255,255,255,0.1); color:#0ff; backdrop-filter: blur(10px); box-shadow:0 0 10px #0ff; transition:0.3s; 
+}
+#menu button:hover { background:rgba(0,255,255,0.2); transform:scale(1.05); }
 
-/* Theme toggle */
+/* Theme Toggle */
 .theme-toggle { text-align:center; margin:15px 0; }
-.theme-toggle button { padding:10px 20px; border:none; border-radius:8px; background:#A020F0; font-weight:bold; cursor:pointer; color:#0ff}
+.theme-toggle button { 
+  padding:12px 25px; border:none; border-radius:12px; font-weight:bold; cursor:pointer; 
+  background:linear-gradient(45deg,#ff00ff,#00ffff); color:#000; box-shadow:0 0 15px #0ff; transition:0.3s; 
+}
+.theme-toggle button:hover { transform:scale(1.05); }
 
 /* PDF Generator */
-#pdf-generator { max-width:800px; margin:100px auto 50px auto; padding:20px; background:rgba(0,0,0,0.6); border-radius:15px; box-shadow:0 0 20px rgba(0,255,255,0.5); }
-body.light #pdf-generator { background:#f0f8ff; color:#000; }
-#pdf-generator h1 { text-align:center; margin-bottom:12px; }
-#pdf-generator p.description { text-align:center; margin-bottom:22px; font-size:16px; color:#0f0; background:#123; border-radius:10px;}
-textarea { width:100%; height:200px; border-radius:10px; padding:10px; font-size:16px; }
-#pdf-generator button { margin-top:10px; padding:15px 25px; border:none; border-radius:10px; cursor:pointer; font-weight:bold; background:#00f; color:#0ff; }
-#pdf-generator button:hover { background:#05f;}
-#pdf-status { background:#123456;margin-top:10px; font-weight:bold; text-align:center; font-size:18px;border-radius:15px; color:#0f0; }
-
-/* Footer links */
-#footer-links { text-align:center; margin-top:40px; font-size:14px; color:#f0f; }
-#footer-links a { color:#07f; text-decoration:underline; margin:0 5px; }
-
-/* Cookie banner */
-#cookie-banner { 
-  position: fixed; 
-  bottom: 0; 
-  width: 100%; 
-  background: #123456; 
-  color: #f0f8ff; 
-  padding: 15px; 
-  text-align: center; 
-  z-index: 9999; 
+#pdf-generator { 
+  max-width:850px; margin:50px auto 50px auto; padding:25px; border-radius:20px; 
+  backdrop-filter: blur(10px); background:rgba(0,0,0,0.5); box-shadow:0 0 30px #0ff inset; text-align:center;
 }
-#cookie-banner button { display: block; margin: 15px auto 0 auto; padding: 8px 20px; border: none; border-radius: 5px; cursor: pointer; background: #00ffff; color: #000; font-weight: bold; }
-#cookie-banner a { color: #0ff; text-decoration: underline; }
+body.light #pdf-generator { background:rgba(255,255,255,0.3); color:#000; box-shadow:0 0 20px #00f inset; }
+
+#pdf-generator h1 { margin-bottom:15px; font-size:2.2em; text-shadow:0 0 10px #0ff; }
+#pdf-generator p.description { margin-bottom:25px; font-size:16px; color:#0f8f; background:rgba(0,0,0,0.2); border-radius:12px; padding:10px; }
+
+/* Textarea e arquivos */
+textarea, input[type=file] { 
+  width:95%; margin-top:15px; padding:10px; border-radius:12px; border:none; 
+  backdrop-filter: blur(6px); background:rgba(255,255,255,0.05); color:#0ff; box-shadow:0 0 10px #0ff inset; font-size:18px; 
+}
+textarea::placeholder { color:#0ff; opacity:0.6; }
+body.light textarea, body.light input[type=file] { background:rgba(255,255,255,0.9); color:#000; }
+
+/* Botões PDF */
+#pdf-generator button { margin-top:15px; padding:15px 30px; border:none; border-radius:15px; cursor:pointer; font-weight:bold; background:linear-gradient(45deg,#ff00ff,#00ffff); color:#000; box-shadow:0 0 20px #0ff; transition:0.3s; }
+#pdf-generator button:hover { transform:scale(1.05); }
+
+/* Status PDF */
+#pdf-status { margin-top:15px; text-align:center; font-weight:bold; font-size:18px; color:#0f0; }
+body.light #pdf-status { color:blue; }
+
+/* Footer Links */
+#footer-links { text-align:center; margin-top:40px; font-size:14px; }
+#footer-links a { color:#0ff; text-decoration:underline; margin:0 5px; }
+body.light #footer-links a { color:blue; }
+
+/* Cookie Banner */
+#cookie-banner { 
+  position:fixed; bottom:0; width:100%; background:rgba(0,0,0,0.9); color:#fff; 
+  padding:15px; text-align:center; z-index:9999; border-radius:12px 12px 0 0; backdrop-filter: blur(10px); 
+  display:none; transition:0.5s; text-align:center;
+}
+#cookie-banner button { display:block; margin:15px auto 0 auto; padding:10px 20px; border:none; border-radius:12px; cursor:pointer; background:linear-gradient(45deg,#ff00ff,#00ffff); color:#000; font-weight:bold; box-shadow:0 0 15px #0ff; }
+#cookie-banner a { color:#0ff; text-decoration:underline; font-weight:bold; }
+body.light #cookie-banner { background:rgba(255,255,255,0.95); color:#000; }
+body.light #cookie-banner a { color:blue; }
+
+/* Loading animation */
+#pdf-status.loading::after { content:"..."; animation:dotPulse 1s infinite; }
+@keyframes dotPulse { 0%{content:".";} 33%{content:"..";} 66%{content:"...";} 100%{content:".";} }
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <script>
 let generatedDoc = null;
 
@@ -62,7 +107,7 @@ function toggleTheme(){
   document.body.classList.toggle('light');
 }
 
-// Generate PDF with text + uploaded files
+// Generate PDF
 async function generatePDF() {
   const { jsPDF } = window.jspdf;
   const text = document.getElementById('pdf-text').value;
@@ -70,162 +115,116 @@ async function generatePDF() {
   const status = document.getElementById('pdf-status');
   const downloadBtn = document.getElementById('download-btn');
 
-  if(text.trim() === '' && files.length === 0){
-    alert('Please type some text or upload files.');
-    return;
-  }
+  if(text.trim()=='' && files.length===0){ alert('Please type text or upload files'); return; }
 
-  status.textContent = "Generating...";
+  status.textContent="Generating";
+  status.classList.add('loading');
   downloadBtn.style.display="none";
-
-  await new Promise(r => setTimeout(r, 500));
+  await new Promise(r=>setTimeout(r,700));
 
   const doc = new jsPDF();
-  let y = 10;
+  let y=10;
 
-  if(text.trim() !== ''){
-    const lines = doc.splitTextToSize(text, 180);
-    doc.text(lines, 10, y);
-    y += lines.length * 10;
+  if(text.trim()!==''){
+    const lines = doc.splitTextToSize(text,180);
+    doc.text(lines,10,y); y+=lines.length*10;
   }
 
   for(let f of files){
-    if(f.type === "text/plain"){
+    if(f.type==="text/plain"){
       const content = await f.text();
-      const lines = doc.splitTextToSize(content, 180);
-      doc.text(lines, 10, y);
-      y += lines.length * 10;
+      const lines = doc.splitTextToSize(content,180);
+      doc.text(lines,10,y); y+=lines.length*10;
     } else if(f.type.startsWith("image/")){
-      const img = await new Promise(resolve => {
+      const img = await new Promise(resolve=>{
         const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result);
+        reader.onload=e=>resolve(e.target.result);
         reader.readAsDataURL(f);
       });
-      doc.addImage(img, 'JPEG', 10, y, 180, 100);
-      y += 110;
+      doc.addImage(img,'JPEG',10,y,180,100); y+=110;
     }
   }
 
   generatedDoc = doc;
-
-  status.textContent = "✔ Generated successfully!";
+  status.textContent="✅ Generated successfully!";
+  status.classList.remove('loading');
   downloadBtn.style.display="inline-block";
 
-  document.getElementById('file-upload').value = '';
-  document.getElementById('pdf-text').value = '';
+  document.getElementById('file-upload').value='';
+  document.getElementById('pdf-text').value='';
 }
 
-// ⭐ Download fully compatible with Android APK
+// Download PDF
 function downloadPDF() {
-  if (!generatedDoc) return;
-
+  if(!generatedDoc) return;
   const status = document.getElementById('pdf-status');
-  status.textContent = "Downloading...";
-
+  status.textContent="Downloading...";
   const pdfBlob = generatedDoc.output('blob');
   const url = URL.createObjectURL(pdfBlob);
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = "SimplePDF.pdf";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-
-  setTimeout(() => {
-    status.textContent = "✔ Download completed successfully!";
-  }, 700);
+  const a=document.createElement('a'); a.href=url; a.download="SimplePDF.pdf";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>{status.textContent="✅ Download completed successfully!";},700);
 }
 
-// Menu buttons
+// Menu
 function setupMenu(){
-  document.getElementById('menu').innerHTML = `
+  document.getElementById('menu').innerHTML=`
     <button onclick="location.href='#pdf-generator'">Home</button>
     <button onclick="location.href='privacy.html'">Privacy Policy</button>
-    <button onclick="location.href='terms.html'">Terms of Use</button>
+    <button onclick="location.href='terms.html'">Terms</button>
     <button onclick="location.href='about.html'">About</button>
     <button onclick="location.href='faq.html'">FAQ</button>
     <button onclick="location.href='contact.html'">Contact</button>`;
 }
 
-window.addEventListener('load', setupMenu);
-</script>
-</head>
+window.addEventListener('load',setupMenu);
 
-<body class="dark">
-
-<div class="ad-banner-fixed">
-  <span>Ads:</span>
-</div>
-
-<div id="menu"></div>
-
-<div class="theme-toggle">
-  <button onclick="toggleTheme()">Toggle Light/Dark Theme</button>
-</div>
-
-<section id="pdf-generator">
-  <h1>SimplePDF Generator</h1>
-  <p class="description">Create your PDFs easily 100% Free Unlimited Everi days. Type your text or upload files/images, generate, and download instantly!</p>
-  
-  <textarea id="pdf-text" placeholder="Type your text here..."></textarea>
-  <input type="file" id="file-upload" multiple>
-  <button onclick="generatePDF()">Generate PDF</button>
-
-  <p id="pdf-status"></p>
-  <button id="download-btn" style="display:none;margin-top:10px;" onclick="downloadPDF()">Download PDF</button>
-
-  <hr>
-
-  <div id="footer-links">
-    <a href="privacy.html">Privacy Policy</a><br>
-    <a href="terms.html">Terms of Use</a> |
-    <a href="about.html">About</a> | 
-    <a href="contact.html">contact</a> |
-    <a href="faq.html">FAQ</a>
-  </div>
-</section>
-
-<div id="cookie-banner">
-  This website uses cookies to ensure you get the best experience. 
-  <a href="privacy.html">Learn more</a>
-  <button id="accept-cookies">Accept</button>
-</div>
-
-<script>
-// Cookie handling
-function setCookie(name, value, days) {
-  let d = new Date();
-  d.setTime(d.getTime() + (days*24*60*60*1000));
-  let expires = "expires="+ d.toUTCString();
-  document.cookie = name + "=" + value + ";" + expires + ";path=/";
-}
-
-function getCookie(name) {
-  let cname = name + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(';');
-  for(let c of ca) {
-    while (c.charAt(0) == ' ') c = c.substring(1);
-    if (c.indexOf(cname) == 0) return c.substring(cname.length, c.length);
-  }
-  return "";
-}
-
-window.addEventListener('load', function () {
-  const banner = document.getElementById('cookie-banner');
-  const btn = document.getElementById('accept-cookies');
-
-  if (!getCookie("acceptedCookies")) {
-    banner.style.display = "block";
-  }
-
-  btn.addEventListener('click', function() {
-    setCookie("acceptedCookies", "yes", 365);
-    banner.style.display = "none";
+// Cookies usando localStorage
+window.addEventListener('load', function(){
+  const banner=document.getElementById('cookie-banner');
+  const btn=document.getElementById('accept-cookies');
+  if(!localStorage.getItem('cookiesAccepted')) banner.style.display="block";
+  btn.addEventListener('click', function(){
+    localStorage.setItem('cookiesAccepted','true');
+    banner.style.display="none";
   });
 });
 </script>
+</head>
+<body class="dark">
+
+<div class="ad-banner-fixed"><span>Ads:</span></div>
+
+<div id="menu"></div>
+
+<div class="theme-toggle"><button onclick="toggleTheme()">Toggle Light/Dark Theme</button></div>
+
+<section id="pdf-generator">
+<h1>SimplePDF Generator</h1>
+<p class="description">Create your PDFs easily. Type your text or upload files/images, generate, and download instantly!</p>
+
+<textarea id="pdf-text" placeholder="Type your text here..." rows="15"></textarea>
+<input type="file" id="file-upload" multiple>
+<button onclick="generatePDF()">Generate PDF</button>
+
+<p id="pdf-status"></p>
+<button id="download-btn" style="display:none;margin-top:10px;" onclick="downloadPDF()">Download PDF</button>
+
+<hr>
+<div id="footer-links">
+<a href="privacy.html">Privacy Policy</a><br>
+<a href="terms.html">Terms</a> |
+<a href="about.html">About</a> |
+<a href="contact.html">Contact</a> |
+<a href="faq.html">FAQ</a>
+</div>
+</section>
+
+<div id="cookie-banner">
+This website uses cookies to ensure you get the best experience. 
+<a href="privacy.html">Learn more</a>
+<button id="accept-cookies">Accept</button>
+</div>
 
 </body>
-</html>
+  </html>
