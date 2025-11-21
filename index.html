@@ -6,11 +6,11 @@
 <title>SimplePDF - Futuristic PDF Generator</title>
 <style>
 body, html { margin:0; padding:0; font-family: 'Orbitron', sans-serif; }
-body.dark { background: linear-gradient(to right, #0f2027, #203a43, #2c5364); color:#fff; }
+body.dark { background: linear-gradient(to right, #234, #135, #123456); color:#fff; }
 body.light { background:#f4f4f4; color:#000; }
 
 /* Fixed Ad banner top */
-.ad-banner-fixed { position:fixed; top:0; width:100%; min-height:50px; background:rgba(0,0,0,0.85); text-align:center; z-index:1000; display:flex; align-items:center; justify-content:center; }
+.ad-banner-fixed { position:fixed; top:0; width:100%; min-height:50px; background:darkblue; text-align:center; z-index:1000; display:flex; align-items:center; justify-content:center;}
 .ad-banner-fixed span { color:#00ffff; font-weight:bold; }
 
 /* Menu */
@@ -20,29 +20,29 @@ body.light { background:#f4f4f4; color:#000; }
 
 /* Theme toggle */
 .theme-toggle { text-align:center; margin:15px 0; }
-.theme-toggle button { padding:10px 20px; border:none; border-radius:8px; background:#ffcc00; font-weight:bold; cursor:pointer; }
+.theme-toggle button { padding:10px 20px; border:none; border-radius:8px; background:#A020F0; font-weight:bold; cursor:pointer; color:#0ff}
 
 /* PDF Generator */
 #pdf-generator { max-width:800px; margin:100px auto 50px auto; padding:20px; background:rgba(0,0,0,0.6); border-radius:15px; box-shadow:0 0 20px rgba(0,255,255,0.5); }
-body.light #pdf-generator { background:rgba(200,200,200,0.8); color:#000; }
-#pdf-generator h1 { text-align:center; margin-bottom:10px; }
-#pdf-generator p.description { text-align:center; margin-bottom:20px; font-size:16px; color:#0ff; }
+body.light #pdf-generator { background:#f0f8ff; color:#000; }
+#pdf-generator h1 { text-align:center; margin-bottom:12px; }
+#pdf-generator p.description { text-align:center; margin-bottom:22px; font-size:16px; color:#0f0; background:#123; border-radius:10px;}
 textarea { width:100%; height:200px; border-radius:10px; padding:10px; font-size:16px; }
-#pdf-generator button { margin-top:10px; padding:15px 25px; border:none; border-radius:10px; cursor:pointer; font-weight:bold; background:#00ffff; color:#000; }
-#pdf-generator button:hover { opacity:0.8; }
-#pdf-status { margin-top:10px; font-weight:bold; text-align:center; font-size:16px; color:#0f0; }
+#pdf-generator button { margin-top:10px; padding:15px 25px; border:none; border-radius:10px; cursor:pointer; font-weight:bold; background:#00f; color:#0ff; }
+#pdf-generator button:hover { background:#05f;}
+#pdf-status { background:#123456;margin-top:10px; font-weight:bold; text-align:center; font-size:18px;border-radius:15px; color:#0f0; }
 
 /* Footer links */
-#footer-links { text-align:center; margin-top:40px; font-size:14px; color:#0ff; }
-#footer-links a { color:#0ff; text-decoration:underline; margin:0 5px; }
+#footer-links { text-align:center; margin-top:40px; font-size:14px; color:#f0f; }
+#footer-links a { color:#07f; text-decoration:underline; margin:0 5px; }
 
 /* Cookie banner */
 #cookie-banner { 
   position: fixed; 
   bottom: 0; 
   width: 100%; 
-  background: #111; 
-  color: #fff; 
+  background: #123456; 
+  color: #f0f8ff; 
   padding: 15px; 
   text-align: center; 
   z-index: 9999; 
@@ -50,7 +50,9 @@ textarea { width:100%; height:200px; border-radius:10px; padding:10px; font-size
 #cookie-banner button { display: block; margin: 15px auto 0 auto; padding: 8px 20px; border: none; border-radius: 5px; cursor: pointer; background: #00ffff; color: #000; font-weight: bold; }
 #cookie-banner a { color: #0ff; text-decoration: underline; }
 </style>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <script>
 let generatedDoc = null;
 
@@ -76,19 +78,17 @@ async function generatePDF() {
   status.textContent = "Generating...";
   downloadBtn.style.display="none";
 
-  await new Promise(r => setTimeout(r, 500)); // simulate processing
+  await new Promise(r => setTimeout(r, 500));
 
   const doc = new jsPDF();
   let y = 10;
 
-  // Add typed text
   if(text.trim() !== ''){
     const lines = doc.splitTextToSize(text, 180);
     doc.text(lines, 10, y);
     y += lines.length * 10;
   }
 
-  // Add uploaded text files and images
   for(let f of files){
     if(f.type === "text/plain"){
       const content = await f.text();
@@ -108,16 +108,34 @@ async function generatePDF() {
 
   generatedDoc = doc;
 
-  status.textContent = "✅ Generated successfully!";
+  status.textContent = "✔ Generated successfully!";
   downloadBtn.style.display="inline-block";
 
-  // Reset input
   document.getElementById('file-upload').value = '';
   document.getElementById('pdf-text').value = '';
 }
 
-// Download PDF
-function downloadPDF() { if(generatedDoc){ generatedDoc.save('SimplePDF.pdf'); } }
+// ⭐ Download fully compatible with Android APK
+function downloadPDF() {
+  if (!generatedDoc) return;
+
+  const status = document.getElementById('pdf-status');
+  status.textContent = "Downloading...";
+
+  const pdfBlob = generatedDoc.output('blob');
+  const url = URL.createObjectURL(pdfBlob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = "SimplePDF.pdf";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  setTimeout(() => {
+    status.textContent = "✔ Download completed successfully!";
+  }, 700);
+}
 
 // Menu buttons
 function setupMenu(){
@@ -130,29 +148,26 @@ function setupMenu(){
     <button onclick="location.href='contact.html'">Contact</button>`;
 }
 
-// Initialize menu on load
 window.addEventListener('load', setupMenu);
 </script>
 </head>
+
 <body class="dark">
 
-<!-- Fixed AdSense banner top -->
 <div class="ad-banner-fixed">
   <span>Ads:</span>
 </div>
 
-<!-- Menu -->
 <div id="menu"></div>
 
-<!-- Theme toggle -->
 <div class="theme-toggle">
   <button onclick="toggleTheme()">Toggle Light/Dark Theme</button>
 </div>
 
-<!-- PDF Generator Section -->
 <section id="pdf-generator">
   <h1>SimplePDF Generator</h1>
-  <p class="description">Create your PDFs easily. Type your text or upload files/images, generate, and download instantly!</p>
+  <p class="description">Create your PDFs easily 100% Free Unlimited Everi days. Type your text or upload files/images, generate, and download instantly!</p>
+  
   <textarea id="pdf-text" placeholder="Type your text here..."></textarea>
   <input type="file" id="file-upload" multiple>
   <button onclick="generatePDF()">Generate PDF</button>
@@ -160,16 +175,17 @@ window.addEventListener('load', setupMenu);
   <p id="pdf-status"></p>
   <button id="download-btn" style="display:none;margin-top:10px;" onclick="downloadPDF()">Download PDF</button>
 
-  <!-- Footer links -->
+  <hr>
+
   <div id="footer-links">
-    <a href="privacy.html">Privacy Policy</a> |
+    <a href="privacy.html">Privacy Policy</a><br>
     <a href="terms.html">Terms of Use</a> |
-    <a href="about.html">About</a> |
+    <a href="about.html">About</a> | 
+    <a href="contact.html">contact</a> |
     <a href="faq.html">FAQ</a>
   </div>
 </section>
 
-<!-- Cookie Banner -->
 <div id="cookie-banner">
   This website uses cookies to ensure you get the best experience. 
   <a href="privacy.html">Learn more</a>
@@ -177,18 +193,36 @@ window.addEventListener('load', setupMenu);
 </div>
 
 <script>
-// Cookie Banner Script
-window.addEventListener('load', function() {
+// Cookie handling
+function setCookie(name, value, days) {
+  let d = new Date();
+  d.setTime(d.getTime() + (days*24*60*60*1000));
+  let expires = "expires="+ d.toUTCString();
+  document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
+
+function getCookie(name) {
+  let cname = name + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let c of ca) {
+    while (c.charAt(0) == ' ') c = c.substring(1);
+    if (c.indexOf(cname) == 0) return c.substring(cname.length, c.length);
+  }
+  return "";
+}
+
+window.addEventListener('load', function () {
   const banner = document.getElementById('cookie-banner');
   const btn = document.getElementById('accept-cookies');
 
-  if (!localStorage.getItem('cookiesAccepted')) {
-    banner.style.display = 'block';
+  if (!getCookie("acceptedCookies")) {
+    banner.style.display = "block";
   }
 
   btn.addEventListener('click', function() {
-    localStorage.setItem('cookiesAccepted', 'true');
-    banner.style.display = 'none';
+    setCookie("acceptedCookies", "yes", 365);
+    banner.style.display = "none";
   });
 });
 </script>
